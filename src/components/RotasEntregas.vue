@@ -1,29 +1,61 @@
 <template>
-  
+<div class="container">
+  <button @click="fetchAPI" type="button" class="btn btn-primary">Carregar Rotas</button>
+  <div>
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   name: 'RotasEntregas',
+
   mounted: function() {
     this.$store.dispatch('fetchApi')
   },
+
   data: function() {
     return {
       resultado: "",
+      sum: 0,
     }
   },
+
   methods: {
     fetchAPI() {
-      this.$store.dispatch('fetchApi')
+      this.resultado = this.$store.state.data
+      const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+      ];
+      const data = {
+        labels: labels,
+        datasets: [{
+          label: 'My First dataset',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+      };
+      const config = {
+        type: 'line',
+        data,
+        options: {}
+      };
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;

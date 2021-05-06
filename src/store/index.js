@@ -22,10 +22,10 @@ export default new Vuex.Store({
       fetch("https://6050b01f5346090017670430.mockapi.io/api/routes", {
         "method": "GET",
       })
-      .then(res => {
-        console.log(res)
+      .then(res => res.json())
+      .then((out) => {
         context.commit('SET_LOADING', false)
-        context.commit('SET_DATA', res.data)
+        context.commit('SET_DATA', out)
       })
     }
   },
