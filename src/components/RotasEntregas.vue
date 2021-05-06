@@ -1,8 +1,31 @@
 <template>
 <div class="container">
   <h1>Gráfico de Rotas BLD</h1>
-  <p>Clique no botão abaixo para gerar a tabel com as rotas dos últimos 15 dias.</p>
-  <button @click="fetchAPI" type="button" class="btn btn-primary">Carregar Rotas</button>
+
+  <div v-if="cardsVisivel" class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Quilômetros totais</h5>
+          <p class="card-text">{{totalDistancia}} Kms</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Multas totais</h5>
+          <p class="card-text">{{totalMultas}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div v-if="!cardsVisivel">
+    <p >Clique no botão abaixo para gerar um gráfico com as rotas dos últimos 15 dias.</p>
+    <button @click="fetchAPI" type="button" class="btn btn-primary">Carregar Rotas</button>
+  </div>
   <div>
     <canvas id="myChart"></canvas>
   </div>
@@ -19,7 +42,10 @@ export default {
 
   data: function() {
     return {
-      rotasJson: ""
+      rotasJson: "",
+      totalDistancia: 0,
+      totalMultas: "",
+      cardsVisivel: false
     }
   },
 
@@ -39,18 +65,26 @@ export default {
         // 3) valor total de multas do dia
       }
 
-      
+      var totalDistancia = 0
+      var totalMultas = 0
       for(i=0; i<this.rotasJson.length; i++) { // contar os dados das rotas
         var distancia = this.rotasJson[i].finalKm - this.rotasJson[i].initialKm
+        var multa = this.rotasJson[i].finesTotalAmount
         dias[this.rotasJson[i].date][0] += distancia //posicao [0] = total km naquele dia
         dias[this.rotasJson[i].date][1] += 1 // posicao [1] = contador de rotas daquele dia
-        dias[this.rotasJson[i].date][2] += this.rotasJson[i].finesTotalAmount // posicao [2] = total multas naquele dia
+        dias[this.rotasJson[i].date][2] += multa // posicao [2] = total multas naquele dia
+        totalDistancia += distancia
+        totalMultas += multa
       }
 
-      var dataDistanciaTotal = []
-      var dataMultasTotal = []
-      var dataMediaDistancia = []
-      var variableLabels = [] 
+      this.totalDistancia = totalDistancia
+      this.totalMultas = totalMultas.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+      this.cardsVisivel = true
+
+      var dataDistanciaTotal = [] // Y: distancias
+      var dataMultasTotal = [] // Y: multas
+      var dataMediaDistancia = [] // Y: media das distancias
+      var variableLabels = [] // X: labels
       for (const [key, value] of Object.entries(dias)) { // preencher os vetores com dados
         variableLabels.push(key)
         dataDistanciaTotal.push(dias[key][0]) // preenche o vetor com as distancias totais por dia
@@ -101,18 +135,4 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

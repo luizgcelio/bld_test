@@ -1,19 +1,18 @@
-# bld_test
+# Desafio BLD
+O desafio é desenvolver uma webpage, representando um dashboard básico, que se conecta a uma API REST para buscar dados sobre rotas, e então desenha um gráfico para representar algumas informações descritas a seguir.
 
-## Project setup
+
+### Após clonar o projeto, entre na pasta e execute o seguinte comando:
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Depois da instalação, execute o comando a seguir para que ele compile o código. Ele estará rodando no localhost padrão.
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Para produção, execute o comando abaixo. Ele compila e minimiza o projeto.
 ```
 npm run build
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
